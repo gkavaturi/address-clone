@@ -1,0 +1,156 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>Address Clone</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .Container {
+        width: 100%;
+        font-size: 0;
+      }
+
+      .Section {
+        display: inline-block;
+        width: 50%;
+        padding: 50px;
+
+        font-size: 16px;
+      }
+
+      .Heading {
+        margin: 10px 5px;
+      }
+
+      .Section:first-child .Heading{
+        margin-bottom: 30px;
+      }
+
+      .CloneAddrWrapper {
+        margin: 10px 8px;
+      }
+
+      #CloneAddr {
+        margin-right: 5px;
+      }
+
+      .InputField {
+        height: 32px;
+        padding: 6px 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .Field {
+        margin: 5px 10px;        
+      }
+
+      .Caption {
+        display: inline-block;
+        width: 120px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="Container">
+      <div class="Section">
+        <h3 class="Heading">Shipping Address</h3>
+        <div class="AddrSection">
+          <div class="Field">
+            <span class="Caption">First Name</span>
+            <input type="text" class="InputField" data-field="FirstName" placeholder="First Name"/>
+          </div>
+          <div class="Field">
+            <span class="Caption">Last Name</span>
+            <input type="text" class="InputField" data-field="LastName" placeholder="Last Name"/>
+          </div>
+          <div class="Field">
+            <span class="Caption">Street Address 1</span>
+            <input type="text" class="InputField" data-field="AddressTwo" placeholder="Street Address"/>
+          </div>
+          <div class="Field">
+            <span class="Caption">Street Address 2</span>
+            <input type="text" class="InputField" data-field="AddressOne" placeholder="House No, Apt No, .."/>
+          </div>
+          <div class="Field">
+            <span class="Caption">City</span>
+            <input type="text" class="InputField" data-field="AddressCity" placeholder="City"/>
+          </div>
+          <div class="Field">
+            <span class="Caption">State</span>
+            <input type="text" class="InputField" data-field="AddressState" placeholder="State"/>
+          </div>
+          <div class="Field">
+            <span class="Caption">Zip Code</span>
+            <input type="text" class="InputField" data-field="AddressCountry" placeholder="Zip"/>
+          </div>
+        </div>
+      </div>
+      <div class="Section">
+        <h3 class="Heading">Billing Address</h3>
+        <div class="CloneAddrWrapper"><input type="checkbox" id="CloneAddr"/>Billing address same as shipping address</div>
+        <div class="AddrSection">
+        </div>
+      </div>
+    </div>
+    <script>
+      (function () {
+        var transferText = function (e) {
+          var userInput = e.target.value,
+              field = e.target.attributes['data-field'].value;
+          document.body.querySelectorAll('input[data-field="'+field+'"]')[1].value = userInput;
+        }
+
+        var cloneAddrListen = function (flag) {
+          var els = document.getElementsByClassName("AddrSection")[0].getElementsByClassName("Field");
+          
+          for (var i = 0; i < els.length; i ++) {
+            if (flag) {
+              els[i].addEventListener("keyup", transferText);
+            } else {
+              els[i].removeEventListener("keyup", transferText);
+            }
+          }
+        }
+
+        var removeAddrClone = function () {
+          if (document.getElementById("CloneAddr").checked) { 
+            document.getElementById("CloneAddr").checked = false; 
+            cloneAddrListen(false);
+          } 
+        }
+
+        var addCloning = function (e) {
+          if (e.target.checked) {
+            copyAddr();
+            cloneAddrListen(true);
+          }
+          else {
+            cloneAddrListen(false);
+          }
+        }
+
+        var copyAddr = function () {
+          document.getElementsByClassName("AddrSection")[1].remove();
+          document.getElementsByClassName("Section")[1].appendChild(document.getElementsByClassName("AddrSection")[0].cloneNode('deep'));
+          document.body.getElementsByClassName("AddrSection")[1].addEventListener("click", removeAddrClone);
+        }
+
+        var init = function () {
+          copyAddr();
+
+          document.getElementById("CloneAddr").addEventListener("click", addCloning);
+        }
+
+        init();
+        
+      })();
+    </script>
+  </body>
+</html>
